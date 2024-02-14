@@ -1,108 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
+class Database ; 
+class Passenger ; 
+class Trip ; 
+class Admin ; 
+class Driver ; 
+class Passenger_Companion ; 
 // I have been give the task of creating Ride sharing Platform
 // I am creating a HLD of Ride hsaring platform
-
-class Database
-{
-    // Declaring inside protected class because we also want to give access to the derived classses
-    // Protected will the best access modifier because no one can directly access them outside the
-    // class and we can also pass these vairable to other calsses who all need them
-protected:
-    // I am using map because it will give me faster access to data in logn time
-    //  passengerid , passenger obj
-    static map<long long, Passenger *> passengers;
-
-    // Trip id , Trip objects
-    static map<long long, Trip *> trips;
-
-    // Driver id , Driver objects
-    static map<long long, Driver *> drivers;
-
-    // key will be passenger id and string will be its feedback given my passenger companion
-    static map<long long , string> feedback ;
-
-    static map<long long , vector<long long> > passenger_to_trip ; 
-
-public:
-    // This function is used for pushing feedback into the database
-
-    // This function is used for getting 
-    static void get_all_trips_by_passenger_id(long long passenger_id){
-        
-        for(auto &iter : passenger_to_trip[passenger_id]){
-            cout << iter << endl;
-        }
-    }
-
-    // All the function below are to push the new details into there corresoponding data bases
-    static void push_feedback(long long id , string new_feedback){
-        feedback[id] = new_feedback ; 
-    }
-    static void push_passenger_details(long long id , Passenger * obj) {
-        passengers[id] = obj ; 
-    }
-    static void push_trip_details(long long id , Trip * obj){
-        trips[id] = obj ; 
-    }
-
-    static void push_driver_details(long long id , Driver * obj){
-        drivers[id] = obj ; 
-    }
-    
-};
-class Admin : public Database
-{
-public:
-    // This function is for accessing all the information regarding all the passengers that have
-    // used this app
-    void printallusers()
-    {
-
-        for (auto &iter : passengers)
-        {
-            // We got the passenger id as a key from the map
-            long long pid = iter.first;
-
-            // we got the passenger data by accessing the public function of passenger class
-            iter.second->printalldetails();
-        }
-    }
-
-    // To get all the trip details
-    void printalltrips()
-    {
-        for (auto &iter : trips)
-        {
-            // We will get the trip id as a key from the map
-            long long tid = iter.first;
-
-            // 
-            iter.second->printalldetails();
-        }
-    }
-
-    // To get all the drivere and there details
-    void printalldriver()
-    {
-        for (auto &iter : drivers)
-        {
-            // We got the driver id
-            long long id = iter.first;
-
-            // Now we will access all the data of the driver using public function of driver class
-            iter.second->printalldetails();
-        }
-    }
-
-    // To get all the user experience feedback 
-    void printallfeedback(){
-        for(auto &iter : feedback){
-            cout << iter.second << endl; 
-        }
-    }
-};
 
 class Passenger
 {
@@ -190,9 +97,9 @@ public:
     }
 
     // To get all the trips that passenger has done
-    void get_all_trips_of_passengers(){
-        Database::get_all_trips_by_passenger_id(passenger_id) ; 
-    }
+    // void get_all_trips_of_passengers(){
+    //     Database::get_all_trips_by_passenger_id(passenger_id) ; 
+    // }
 };
 
 // As this will inherit all the properties of its parent class
@@ -231,11 +138,12 @@ class Passenger_Companion : protected Passenger{
     }
 
     // This will be used to send the feedback the passengers' companion for that ride
-    void send_feedback(string new_feedback){
-        Database::push_feedback(passenger_id , new_feedback ) ; 
-        cout << "Thank you for your kind words" << endl;
-    }
+    // void send_feedback( string new_feedback){
+    //     Database::push_feedback(passenger_id , new_feedback ) ; 
+    //     cout << "Thank you for your kind words" << endl;
+    // }
 };
+
 class Driver
 {
 
@@ -290,6 +198,7 @@ public:
         cout << "Driver's car type is : " << car_type << endl;
     }
 };
+
 class Trip
 {
 protected:
@@ -342,24 +251,138 @@ public:
         total_passengers.push_back(obj) ; 
     }
 };
+class Database
+{
+    // Declaring inside protected class because we also want to give access to the derived classses
+    // Protected will the best access modifier because no one can directly access them outside the
+    // class and we can also pass these vairable to other calsses who all need them
+protected:
+    // I am using map because it will give me faster access to data in logn time
+    //  passengerid , passenger obj
+    static map<long long, Passenger *> passengers;
+
+    // Trip id , Trip objects
+    static map<long long, Trip *> trips;
+
+    // Driver id , Driver objects
+    static map<long long, Driver *> drivers;
+
+    // key will be passenger id and string will be its feedback given my passenger companion
+    static map<long long , string> feedback ;
+
+    static map<long long , vector<long long> > passenger_to_trip ; 
+
+public:
+    // This function is used for pushing feedback into the database
+
+    // This function is used for getting 
+    static void get_all_trips_by_passenger_id(long long passenger_id){
+        
+        for(auto &iter : passenger_to_trip[passenger_id]){
+            cout << iter << endl;
+        }
+    }
+
+    // All the function below are to push the new details into there corresoponding data bases
+    static void push_feedback(long long id , string new_feedback){
+        feedback[id] = new_feedback ; 
+    }
+    static void push_passenger_details(long long id , Passenger * obj) {
+        passengers[id] = obj ; 
+    }
+    static void push_trip_details(long long id , Trip * obj){
+        trips[id] = obj ; 
+    }
+
+    static void push_driver_details(long long id , Driver * obj){
+        drivers[id] = obj ; 
+    }
+    
+};
+class Admin : public Database
+{
+public:
+    Admin() : Database(){
+
+    }
+    // This function is for accessing all the information regarding all the passengers that have
+    // used this app
+    void printallusers()
+    {
+
+        for (auto &iter : passengers)
+        {
+            // We got the passenger id as a key from the map
+            long long pid = iter.first;
+
+            // we got the passenger data by accessing the public function of passenger class
+            iter.second->printalldetails();
+        }
+    }
+
+    // To get all the trip details
+    void printalltrips()
+    {
+        for (auto &iter : trips)
+        {
+            // We will get the trip id as a key from the map
+            long long tid = iter.first;
+
+            // 
+            iter.second->printalldetails();
+        }
+    }
+
+    // To get all the drivere and there details
+    void printalldriver()
+    {
+        for (auto &iter : drivers)
+        {
+            // We got the driver id
+            long long id = iter.first;
+
+            // Now we will access all the data of the driver using public function of driver class
+            iter.second->printalldetails();
+        }
+    }
+
+    // To get all the user experience feedback 
+    void printallfeedback(){
+        for(auto &iter : feedback){
+            cout << iter.second << endl; 
+        }
+    }
+};
+
+
+
+
 int main()
 {
     // Creating 2 new passengers
-    Passenger * p1 = new Passenger("Abhishek Mishra" , 12115047 , "7027774921" );
-    Passenger * p2 = new Passenger("Mohit" , 12115750 , "1234567890") ; 
+    Passenger * p1 = new Passenger("Abhishek Mishra" , 12115047 , "7027774921" , "Jalandhar" , "delhi" );
+    Passenger * p2 = new Passenger("Mohit" , 12115750 , "1234567890" , "ambala" , "Delhi" ) ; 
 
     Driver * d1 = new Driver("Mukesh" , 1325698 , "9876543210" , "HR 01 8051" , "sedan") ; 
     // Creating 2 new Trips
     Trip * t1 = new Trip(101 , d1->get_driver_name() ,d1->get_driver_phone_num()  , d1->get_cab_number_plate() , d1->get_car_type()) ; 
 
     // pushing the data into the shared ride into the same trip
+    cout << endl << "***************************************************************************************** "; 
+    cout << endl;
     t1->add_Passengers(p1) ;
     t1->add_Passengers(p2) ; 
 
-    // Adding trip details to database
-    Database::push_trip_details(t1->get_trip_id() , t1) ; 
-    Database::push_passenger_details(p1->get_passenger_id() , p1) ; 
-    Database::push_passenger_details(p2->get_passenger_id() , p2) ; 
-    Database::push_driver_details(d1->get_driver_id() , d1) ; 
+    cout << "Printing individual passengeres details" << endl;
+    p1->printalldetails() ; 
+    cout << endl;
+    p1->printalldetails() ; 
+
+    
+    cout << endl << endl;
+    cout << "****************************************************************************" << endl;
+    cout << "Printing entire trips common passengers" << endl;
+    t1->printalldetails() ; 
+    
     return 0;
 }
